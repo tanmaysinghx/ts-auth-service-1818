@@ -28,7 +28,7 @@ jobs:
         id: upload-artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ts-auth-service-1818
+          name: docker-image
           path: ts-auth-service-1818.tar
 
       - name: Retrieve Artifact ID
@@ -36,7 +36,7 @@ jobs:
         run: |
           ARTIFACT_ID=$(curl -s -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
             "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" \
-            | jq -r '.artifacts[] | select(.name == "ts-auth-service-1818") | .id')
+            | jq -r '.artifacts[] | select(.name == "docker-image") | .id')
           echo "ARTIFACT_ID=$ARTIFACT_ID" >> $GITHUB_ENV
 
       - name: Set up SSH Agent
@@ -47,19 +47,19 @@ jobs:
       - name: Deploy Docker image to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            # Install Docker if not installed
             sudo yum install -y docker
             sudo systemctl start docker
-
-            # Create directory for Docker image
             mkdir -p /home/ec2-user/ts-auth-service-1818
             cd /home/ec2-user/ts-auth-service-1818
-
+            
             # Download artifact using GitHub API
-            curl -L -o ts-auth-service-1818.tar \
+            curl -L -o ts-auth-service-1818.zip \
               -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.ARTIFACT_ID }}/tarball"
+              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.ARTIFACT_ID }}/zip"
 
+            # Unzip the artifact
+            unzip ts-auth-service-1818.zip
+            
             # Load Docker image from tar file
             docker load -i ts-auth-service-1818.tar
 
