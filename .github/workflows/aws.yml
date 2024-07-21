@@ -31,7 +31,7 @@ jobs:
           path: ts-auth-service-1818.tar
 
       - name: Download Docker image on EC2
-        uses: appleboy/drone-ssh@v1
+        uses: webfactory/ssh-agent
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
