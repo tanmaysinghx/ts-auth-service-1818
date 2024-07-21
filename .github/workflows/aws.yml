@@ -19,11 +19,9 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t ts-auth-service-1818 .
-
       - name: Save Docker image to a tar file
         run: |
           docker save ts-auth-service-1818 > ts-auth-service-1818.tar
-
       - name: Upload Docker image to Artifacts
         id: upload-artifact
         uses: actions/upload-artifact@v3
@@ -38,7 +36,6 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" \
             | jq -r '.artifacts[] | select(.name == "docker-image") | .id')
           echo "ARTIFACT_ID=$ARTIFACT_ID" >> $GITHUB_ENV
-
       - name: Set up SSH Agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -56,13 +53,11 @@ jobs:
             curl -L -o ts-auth-service-1818.zip \
               -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
               "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.ARTIFACT_ID }}/zip"
-
             # Unzip the artifact
             unzip ts-auth-service-1818.zip
             
             # Load Docker image from tar file
             docker load -i ts-auth-service-1818.tar
-
             # Run the Docker container
             docker run -d -p 3000:3000 ts-auth-service-1818
           EOF
