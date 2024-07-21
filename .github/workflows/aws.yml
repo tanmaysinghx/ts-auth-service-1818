@@ -47,19 +47,19 @@ jobs:
       - name: Deploy Docker image to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            # Install Docker if not installed
             sudo yum install -y docker
             sudo systemctl start docker
+
+            # Create directory for Docker image
             mkdir -p /home/ec2-user/ts-auth-service-1818
             cd /home/ec2-user/ts-auth-service-1818
-            
+
             # Download artifact using GitHub API
             curl -L -o ts-auth-service-1818.tar \
               -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.ARTIFACT_ID }}/zip"
+              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ env.ARTIFACT_ID }}/tarball"
 
-            # Unzip the artifact
-            unzip ts-auth-service-1818.tar
-            
             # Load Docker image from tar file
             docker load -i ts-auth-service-1818.tar
 
