@@ -29,6 +29,9 @@ npm install
 
 ### 3. Configure Environment Variables
 
+- Rename ".env.example" to ".env"
+- Create a DB cluster in mongo DB or your preferred DB
+
 ```bash
 DATABASE_URL=your_database_connection_string
 PORT=your_port_number
@@ -146,7 +149,7 @@ npm run dev
         "id": 3,
         "email": "tester3@gmail.com",
         "username": "tester3"
-    }
 }
+    }
 
 ```

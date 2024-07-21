@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger'); // Adjust the import based on your setup
+const fs = require('fs');
+const path = require('path');
 
 dotenv.config();
 
@@ -15,6 +17,13 @@ app.use(bodyParser.json());
 
 // Serve Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Read the JWT secret from the file
+const jwtSecretPath = path.join(__dirname, 'certicificates', 'jwt-secret.key');
+const jwtSecret = fs.readFileSync(jwtSecretPath, 'utf8').trim();
+
+// Set the JWT_SECRET environment variable
+process.env.JWT_SECRET = jwtSecret;
 
 // Routes
 const authRoutes = require('./routes/auth');
