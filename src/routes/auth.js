@@ -37,7 +37,35 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Login Route
+/**
+ * @openapi
+ * /login:
+ *   post:
+ *     summary: Logs in a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Invalid input
+ */
 router.post('/login', async (req, res) => {
     const { emailOrUsername, password } = req.body;
 

@@ -1,10 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+const { swaggerUi, swaggerSpec } = require('./config/swagger');
 
 dotenv.config();
 
 const app = express();
+
+// Serve Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use(bodyParser.json());
 
 const authRoutes = require('./routes/auth');
