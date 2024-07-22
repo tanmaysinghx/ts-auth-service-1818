@@ -22,7 +22,7 @@ model User {
 
 model OTP {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   // Reference to User.id
+  userId    String   
   otp       String
   expiresAt DateTime
   user      User     @relation(fields: [userId], references: [id])
@@ -33,7 +33,7 @@ model OTP {
 model RefreshToken {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   token     String   @unique
-  userId    String   // Reference to User.id
+  userId    String   
   user      User     @relation(fields: [userId], references: [id])
   expiresAt DateTime
 }
